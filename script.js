@@ -123,6 +123,15 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
     const target = document.querySelector(a.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (target) {
+      // Okamžitě odkrýt obsah cílové sekce — jinak při rychlém
+      // přechodu (klik v menu) sekce na chvíli „zabliká" do prázdna,
+      // protože reveal animace by se spustila až s prodlevou.
+      target.querySelectorAll('.reveal').forEach(el => {
+        el.classList.add('visible');
+        observer.unobserve(el);
+      });
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 });
