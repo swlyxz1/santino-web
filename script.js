@@ -9,25 +9,43 @@ window.addEventListener('scroll', () => {
 });
 
 // ─── MOBILNÍ MENU (hamburger) ─────────────
-const navToggle = document.getElementById('navToggle');
-const navLinks  = document.getElementById('navLinks');
+const navToggle  = document.getElementById('navToggle');
+const navLinks   = document.getElementById('navLinks');
+const navOverlay = document.getElementById('navOverlay');
+
+function closeMenu() {
+  navLinks.classList.remove('open');
+  navToggle.classList.remove('active');
+  navToggle.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('nav-open');
+}
+
+function openMenu() {
+  navLinks.classList.add('open');
+  navToggle.classList.add('active');
+  navToggle.setAttribute('aria-expanded', 'true');
+  document.body.classList.add('nav-open');
+}
 
 if (navToggle && navLinks) {
   navToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    navToggle.classList.toggle('active', isOpen);
-    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    document.body.classList.toggle('nav-open', isOpen);
+    if (navLinks.classList.contains('open')) closeMenu();
+    else openMenu();
   });
 
   // zavřít menu po kliknutí na odkaz
   navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      navToggle.classList.remove('active');
-      navToggle.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('nav-open');
-    });
+    a.addEventListener('click', closeMenu);
+  });
+
+  // zavřít menu kliknutím na ztmavené pozadí
+  if (navOverlay) {
+    navOverlay.addEventListener('click', closeMenu);
+  }
+
+  // zavřít menu klávesou Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) closeMenu();
   });
 }
 

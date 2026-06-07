@@ -95,6 +95,7 @@ a { color: inherit; text-decoration: none; }
 .nav-cta:hover { background: var(--blue-light); transform: translateY(-1px); }
 
 .nav-cta-mobile { display: none; }
+.nav-overlay { display: none; }
 
 /* Hamburger — skrytý na desktopu */
 .nav-toggle {
@@ -711,12 +712,17 @@ footer {
   body.nav-open {
     overflow: hidden;
   }
-  body.nav-open::after {
-    content: '';
+  .nav-overlay {
+    display: none;
     position: fixed;
     inset: 0;
     background: rgba(10,15,30,0.4);
     z-index: 201;
+    cursor: pointer;
+    border: none;
+  }
+  body.nav-open .nav-overlay {
+    display: block;
   }
 
   /* Hero */
