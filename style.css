@@ -94,6 +94,34 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-cta:hover { background: var(--blue-light); transform: translateY(-1px); }
 
+.nav-cta-mobile { display: none; }
+
+/* Hamburger — skrytý na desktopu */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 210;
+}
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
 /* ─── TLAČÍTKA ─────────────────────────────── */
 .btn {
   display: inline-flex;
@@ -613,4 +641,136 @@ footer {
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   RESPONZIVITA — tablet a mobil
+   ════════════════════════════════════════ */
+
+/* ── TABLET (≤ 1024px) ── */
+@media (max-width: 1024px) {
+  .container { padding: 0 28px; }
+
+  .about-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .about-right { padding-top: 0; }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  section { padding: 88px 0; }
+}
+
+/* ── MOBIL / MALÝ TABLET (≤ 768px) ── */
+@media (max-width: 768px) {
+  /* Navigace → hamburger menu */
+  #nav { padding: 16px 24px; }
+
+  .nav-cta-desktop { display: none; }
+  .nav-toggle { display: flex; }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: min(78vw, 320px);
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 100px 36px 40px;
+    background: var(--white);
+    box-shadow: -16px 0 48px rgba(10,15,30,0.12);
+    transition: right 0.35s ease;
+    z-index: 205;
+  }
+  .nav-links.open { right: 0; }
+  .nav-links li { width: 100%; }
+  .nav-links a {
+    display: block;
+    font-size: 17px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+  }
+  .nav-cta-mobile {
+    display: block;
+    margin-top: 16px;
+  }
+  .nav-cta-mobile .nav-cta {
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  body.nav-open {
+    overflow: hidden;
+  }
+  body.nav-open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(10,15,30,0.4);
+    z-index: 201;
+  }
+
+  /* Hero */
+  #hero { padding: 110px 24px 64px; }
+  .hero-title .line-1,
+  .hero-title .line-2 {
+    font-size: clamp(52px, 16vw, 96px);
+  }
+  .hero-sub { font-size: 15px; padding: 0 8px; }
+  .hero-btns { flex-direction: column; width: 100%; max-width: 320px; margin-left: auto; margin-right: auto; }
+  .hero-btns .btn { width: 100%; justify-content: center; }
+  .hero-stats { gap: 20px; }
+  .stat-n { font-size: 30px; }
+
+  /* Sekce obecně */
+  section { padding: 72px 0; }
+  .container { padding: 0 22px; }
+  .section-title { margin-bottom: 36px; }
+
+  /* O mně */
+  .about-grid { gap: 36px; }
+  .fact-card { padding: 18px 20px; }
+
+  /* Dovednosti */
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Kontakt */
+  .contact-grid { gap: 36px; }
+  .contact-form { padding: 24px; }
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Footer */
+  .footer-inner {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+}
+
+/* ── MALÝ MOBIL (≤ 420px) ── */
+@media (max-width: 420px) {
+  .hero-badge { font-size: 11px; padding: 7px 16px; }
+  .hero-title .line-1,
+  .hero-title .line-2 { font-size: clamp(44px, 17vw, 76px); }
+  .hero-stats { flex-wrap: wrap; row-gap: 16px; }
+  .stat-sep { display: none; }
+  .section-title { font-size: clamp(34px, 9vw, 48px); }
+  .ci-val { font-size: 13px; }
+  .contact-item { padding: 16px 16px; gap: 14px; }
 }
