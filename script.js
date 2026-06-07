@@ -31,28 +31,50 @@ const observer = new IntersectionObserver((entries) => {
 
 reveals.forEach(el => observer.observe(el));
 
-// ─── FORMULÁŘ (jen UI — bez backendu)
-// ✏️ Pokud chceš skutečně odesílat emaily,
-//    napoč Formspree nebo EmailJS
-function handleForm(e) {
+// ─── FORMULÁŘ — odesílání přes Web3Forms (zdarma, bez vlastního serveru)
+// ✏️ UPRAV: Sem vlož svůj Access Key z https://web3forms.com
+//    (zadáš tam jen svůj email a klíč ti během pár vteřin přijde do schránky)
+const WEB3FORMS_ACCESS_KEY = '4a08c522-687f-430e-ae86-fd35435b9ae6';
+
+async function handleForm(e) {
   e.preventDefault();
-  const btn   = e.target.querySelector('button[type="submit"]');
+  const form  = e.target;
+  const btn   = form.querySelector('button[type="submit"]');
   const msg   = document.getElementById('form-msg');
   const orig  = btn.textContent;
 
   btn.textContent = 'Odesílám...';
   btn.disabled    = true;
+  msg.textContent = '';
 
-  setTimeout(() => {
-    btn.textContent = '✓ Zpráva odeslána';
-    msg.textContent = 'Ozvu se co nejdřív. Díky!';
-    e.target.reset();
+  try {
+    const data = new FormData(form);
+    data.append('access_key', WEB3FORMS_ACCESS_KEY);
+
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: data
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      btn.textContent = '✓ Zpráva odeslána';
+      msg.textContent = 'Ozvu se co nejdřív. Díky!';
+      form.reset();
+    } else {
+      throw new Error(result.message || 'Odeslání selhalo');
+    }
+  } catch (err) {
+    btn.textContent = orig;
+    msg.textContent = 'Něco se nepovedlo, zkus to prosím znovu nebo napiš na email přímo.';
+  } finally {
+    btn.disabled = false;
     setTimeout(() => {
       btn.textContent = orig;
-      btn.disabled    = false;
       msg.textContent = '';
     }, 4000);
-  }, 1200);
+  }
 }
 
 // ─── SMOOTH SCROLL pro všechny #linky ─────
